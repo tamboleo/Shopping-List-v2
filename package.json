@@ -1,0 +1,17 @@
+{
+  "name": "shopping-list-v2",
+  "version": "1.0.0",
+  "description": "Shopping List Better Version",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Alejandro Tamboleo",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
