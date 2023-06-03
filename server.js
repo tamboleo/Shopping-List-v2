@@ -1,5 +1,10 @@
+const path = require('path');
 const express = require('express');
 const app = express();
+
+//Static folder
+app.use(express.static(path.join(__dirname, 'public')));
+//Body Parser Middleware
 app.use(express.json());
 require('dotenv').config();
 const db = require('./config/db');
