@@ -12,6 +12,26 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:name', async (req, res) => {
+    try {
+        const name = req.params.name;
+        const product = await Product.findOne({text: name});
+        console.log(product);
+        res.json({success: true, data: product});
+    } catch (error) {
+        res.status(500).json({success: false, data: error});
+    }
+});
+router.delete('/:name', async (req, res) => {
+    try {
+        const name = req.params.name;
+        const product = await Product.findOneAndDelete({text: name});
+        console.log(product);
+        res.json({success: true, data: {}});
+    } catch (error) {
+        res.status(500).json({success: false, data: error});
+    }
+});
 router.post('/', async (req, res) => {
     const product = new Product ({
         text: req.body.text
