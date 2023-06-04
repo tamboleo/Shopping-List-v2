@@ -13,7 +13,6 @@ let isEditMode = false;
 async function displayItems() {
     let itemsFromStorage = await getItemsfromMongo();
     itemsFromStorage = Array.from(itemsFromStorage);
-    console.log(itemsFromStorage);
     itemsFromStorage.forEach((item) => {
         addItemtoDom(item.text);
     });
@@ -33,7 +32,6 @@ async function onaddItemSubmit(e){
     }
     else{
         const doesit = await checkIfItemExists(newitem);
-        console.log(doesit);
         if (doesit) {
             alert('Ya esta en la lista!');
             return
@@ -178,7 +176,6 @@ function checkUI() {
 }
 function filterItems(e) {
     const value = e.target.value.toLowerCase();
-    console.log(value);
     const li = document.querySelectorAll("li");
     li.forEach((item) => {
         if (!(item.firstChild.textContent.includes(value))) {
