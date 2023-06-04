@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: './src/script.js',
     output: {
         path: path.resolve(__dirname, '../public'),
@@ -15,6 +15,9 @@ module.exports = {
             hot: true,
             compress: true,
             historyApiFallback: true,
+            proxy: {
+                '/api' : 'http://localhost:5000',
+            }
         }
     },
     module: {

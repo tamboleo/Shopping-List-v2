@@ -1,7 +1,7 @@
 import axios from "axios"
 class ProducsApi {
     constructor() {
-        this._apiUrl = 'http://localhost:3000/api/products'
+        this._apiUrl = '/api/products'
     }
 
     getProducts(){
