@@ -33,6 +33,7 @@ router.delete('/:name', async (req, res) => {
     }
 });
 router.post('/', async (req, res) => {
+    console.log(req.body)
     const product = new Product ({
         text: req.body.text
     });
@@ -41,6 +42,7 @@ router.post('/', async (req, res) => {
         res.json({success: true, data: savedProduct});
     } catch (error) {
         res.status(500).json({success: false, data: error});
+        console.log(error);
     }
 });
 module.exports = router;

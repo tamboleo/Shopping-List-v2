@@ -8,6 +8,7 @@ import './css/style.css';
 import './images/note.jpg';
 import './images/note.ico';
 import productsApi from './services/productsApi';
+import Product from '../../models/Product';
 let isEditMode = false;
 async function displayItems() {
     let itemsFromStorage = await getItemsfromMongo();
@@ -19,7 +20,7 @@ async function displayItems() {
     checkUI();
 }
 
-function onaddItemSubmit(e){
+async function onaddItemSubmit(e){
     e.preventDefault();
     e.stopPropagation();
     const newitem = itemInput.value;
@@ -31,8 +32,10 @@ function onaddItemSubmit(e){
         isEditMode = false;
     }
     else{
-        if (checkIfItemExists(newitem)) {
-            alert('Ya esta en la compraa!');
+        const doesit = await checkIfItemExists(newitem);
+        console.log(doesit);
+        if (doesit) {
+            alert('Ya esta en la lista!');
             return
         }
     }
@@ -46,6 +49,7 @@ function onaddItemSubmit(e){
     addItemtoDom(newitem);
     //add item to local storage
     addItemToStorage(newitem);
+    addItemtoMongo(newitem);
     checkUI();
     itemInput.value = '';
 }
@@ -62,6 +66,14 @@ function addItemToStorage(item) {
     itemsFromStorage.push(item);
     // Convert to JSON string and set to Local storage
     localStorage.setItem('items', JSON.stringify(itemsFromStorage));
+}
+
+ async function addItemtoMongo(item) {
+    try {
+        const res = await productsApi.addProduct(item);
+    } catch (error) {
+        
+    }
 }
 
 function getItemfromStorage() {
@@ -96,16 +108,24 @@ function createIcon(classes) {
 }
 function onClickItem(e) {
     if (e.target.parentElement.classList.contains('remove-item')) {
-        console.log('click');
         removeItem(e.target.parentElement.parentElement);
      } else{
     setItemToEdit(e.target);
      }
 }
 
-function checkIfItemExists(item) {
+async function checkIfItemExists(item) {
     const itemsFromStorage =getItemfromStorage();
-    return itemsFromStorage.includes(item)
+    let mongoItem;
+    try {
+        mongoItem = await productsApi.getProductsbyName(item);
+        if (mongoItem.data.data.text === item) {
+            return true;
+        }
+    } catch (error) {
+        return false;
+    }
+
 }
 
 function setItemToEdit(item) {
@@ -122,6 +142,7 @@ function removeItem(item) {
     if (confirm('Are you sure?')) {
         //Remove Item from DOM
         item.remove();
+        productsApi.removeProduct(item.textContent);
         //Remove item from Local Storage
         removeItemFromStorage(item.textContent);
     }
@@ -135,7 +156,8 @@ function removeItemFromStorage(item) {
 }
 function clearItems() {
     while (itemList.firstChild) {
-        itemList.removeChild(itemList.firstChild)
+        productsApi.removeProduct(itemList.firstChild.textContent);
+        itemList.removeChild(itemList.firstChild);
     }
     localStorage.removeItem('items');
     checkUI();
